@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Pasapalabra por voz</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f7fa;
+  text-align: center;
+  padding: 20px;
+}
+#letter {
+  font-size: 60px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+#definition {
+  font-size: 18px;
+  margin: 15px 0;
+  min-height: 60px;
+}
+button {
+  padding: 10px 18px;
+  margin: 5px;
+  font-size: 16px;
+}
+#status {
+  margin-top: 15px;
+  font-size: 16px;
+  color: #555;
+}
+#score {
+  margin-top: 10px;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<h1>Pasapalabra por voz</h1>
+
+<div id="letter">A</div>
+<div id="definition"></div>
+
+<button id="btnSpeakQuestion">Escuchar pregunta</button>
+<button id="btnAnswerVoice">Responder por voz</button>
+<button id="btnPasapalabra">Pasapalabra</button>
+
+<div id="status"></div>
+<div id="score"></div>
+
+<script>
+// --- PREGUNTAS DE EJEMPLO ---
+const questions = [
+  { letter: "A", definition: "Con la A: Órgano que bombea la sangre por todo el cuerpo.", answer: "corazón", done: false },
+  { letter: "B", definition: "Con la B: Órgano donde se almacena la orina.", answer: "vejiga", done: false },
+  { letter: "C", definition: "Con la C: Órgano que controla todo el cuerpo.", answer: "cerebro", done: false },
+  { letter: "H", definition: "Con la H: Órgano que impulsa la sangre.", answer: "corazón", done: false },
+  { letter: "P", definition: "Con la P: Órgano que ayuda a digerir los alimentos y produce insulina.", answer: "páncreas", done: false }
+];
+
+let currentIndex = 0;
+let correct = 0;
+let wrong = 0;
+
+// --- VOZ: SÍNTESIS ---
+function speak(text) {
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = "es-ES";
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utter);
+}
+
+// --- VOZ: RECONOCIMIENTO ---
+function startRecognition(callback) {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert("Tu navegador no soporta reconocimiento de voz.");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = "es-ES";
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  recognition.onstart = () => statusEl.textContent = "Escuchando...";
+  recognition.onerror = (e) => statusEl.textContent = "Error: " + e.error;
+
+  recognition.onresult = (e) => {
+    const transcript = e.results[0][0].transcript.toLowerCase().trim();
+    callback(transcript);
+  };
+
+  recognition.start();
+}
+
+// --- ACTUALIZAR PANTALLA ---
+const letterEl = document.getElementById("letter");
+const definitionEl = document.getElementById("definition");
+const statusEl = document.getElementById("status");
+const scoreEl = document.getElementById("score");
+
+function showCurrentQuestion() {
+  let attempts = 0;
+  while (questions[currentIndex].done && attempts < questions.length) {
+    currentIndex = (currentIndex + 1) % questions.length;
+    attempts++;
+  }
+
+  if (questions.every(q => q.done)) {
+    definitionEl.textContent = "¡Rosco terminado!";
+    letterEl.textContent = "✔";
+    scoreEl.textContent = `Aciertos: ${correct} | Fallos: ${wrong}`;
+    return;
+  }
+
+  const q = questions[currentIndex];
+  letterEl.textContent = q.letter;
+  definitionEl.textContent = q.definition;
+  scoreEl.textContent = `Aciertos: ${correct} | Fallos: ${wrong}`;
+  statusEl.textContent = "";
+}
+
+// --- COMPROBAR RESPUESTA ---
+function checkAnswer(userAnswer) {
+  const q = questions[currentIndex];
+  statusEl.textContent = `Has dicho: "${userAnswer}"`;
+
+  if (userAnswer === "pasapalabra") {
+    currentIndex = (currentIndex + 1) % questions.length;
+    showCurrentQuestion();
+    return;
+  }
+
+  if (userAnswer === q.answer) {
+    correct++;
+    q.done = true;
+    statusEl.textContent += " → ¡Correcto!";
+  } else {
+    wrong++;
+    q.done = true;
+    statusEl.textContent += ` → Incorrecto. Era "${q.answer}".`;
+  }
+
+  currentIndex = (currentIndex + 1) % questions.length;
+  setTimeout(showCurrentQuestion, 800);
+}
+
+// --- BOTONES ---
+document.getElementById("btnSpeakQuestion").onclick = () => speak(questions[currentIndex].definition);
+document.getElementById("btnAnswerVoice").onclick = () => startRecognition(checkAnswer);
+document.getElementById("btnPasapalabra").onclick = () => {
+  statusEl.textContent = "Pasapalabra.";
+  currentIndex = (currentIndex + 1) % questions.length;
+  showCurrentQuestion();
+};
+
+showCurrentQuestion();
+</script>
+
+</body>
+</html>
