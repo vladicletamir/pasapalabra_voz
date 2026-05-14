@@ -7,166 +7,54 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0d0f1a;
-    --surface: #161927;
-    --card: #1e2235;
-    --border: #2a2f45;
-    --accent: #f7c948;
-    --accent2: #4fc3f7;
-    --green: #4caf7d;
-    --red: #e05c5c;
-    --text: #e8eaf6;
-    --muted: #7a7f9a;
+    --bg: #0d0f1a; --surface: #161927; --card: #1e2235; --border: #2a2f45;
+    --accent: #f7c948; --accent2: #4fc3f7; --green: #4caf7d; --red: #e05c5c;
+    --text: #e8eaf6; --muted: #7a7f9a;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text);
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center;
     padding: 20px 16px 40px;
     background-image: radial-gradient(ellipse at 20% 20%, #1a1f3a 0%, transparent 60%),
                       radial-gradient(ellipse at 80% 80%, #0f1a2e 0%, transparent 60%);
   }
-  h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2rem, 6vw, 3rem);
-    letter-spacing: 4px;
-    color: var(--accent);
-    text-shadow: 0 0 30px rgba(247,201,72,0.3);
-    margin-bottom: 2px;
-  }
-  .subtitle {
-    font-size: 0.8rem;
-    color: var(--muted);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-
-  /* SELECTOR DE IDIOMA */
-  .lang-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-  .lang-btn {
-    font-family: 'Nunito', sans-serif;
-    font-weight: 800;
-    font-size: 0.85rem;
-    padding: 7px 18px;
-    border-radius: 50px;
-    border: 2px solid var(--border);
-    background: var(--surface);
-    color: var(--muted);
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 1px;
-  }
-  .lang-btn.active {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: rgba(247,201,72,0.08);
-  }
-
-  /* ROSCO */
-  .rosco-wrapper {
-    position: relative;
-    width: min(340px, 88vw);
-    height: min(340px, 88vw);
-    margin-bottom: 20px;
-    overflow: visible;
-  }
-  .rosco-wrapper svg { width: 100%; height: 100%; overflow: visible; }
-  .center-display {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    pointer-events: none;
-  }
-  .big-letter {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(4rem, 14vw, 6rem);
-    color: var(--accent);
-    line-height: 1;
-    text-shadow: 0 0 40px rgba(247,201,72,0.5);
-  }
-  .letter-label { font-size: 0.7rem; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
-
-  /* DEFINICIÓN */
-  .definition-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 18px 22px;
-    width: min(480px, 100%);
-    min-height: 72px;
-    font-size: 0.97rem;
-    line-height: 1.6;
-    color: var(--text);
-    text-align: center;
-    margin-bottom: 16px;
-    transition: border-color 0.3s, box-shadow 0.3s;
-  }
-  .definition-card.highlight { border-color: var(--accent2); box-shadow: 0 0 20px rgba(79,195,247,0.1); }
-
-  /* BOTONES */
-  .btn-row {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    justify-content: center; margin-bottom: 14px;
-    width: min(480px, 100%);
-  }
-  button {
-    font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.88rem;
-    letter-spacing: 0.5px; padding: 11px 18px; border: none; border-radius: 10px;
-    cursor: pointer; transition: all 0.15s; display: flex; align-items: center;
-    gap: 6px; flex: 1; min-width: 100px; justify-content: center;
-  }
-  button:hover:not(:disabled) { transform: translateY(-1px); }
-  button:active:not(:disabled) { transform: translateY(0); }
-  button:disabled { opacity: 0.4; cursor: not-allowed; }
-  #btnEscuchar  { background: var(--accent2); color: #0d0f1a; }
-  #btnResponder { background: var(--accent);  color: #0d0f1a; }
-  #btnParar     { background: var(--green); color: #fff; animation: pulse 1s infinite; display: none; }
-  #btnPasa { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
-  #btnPasa:hover:not(:disabled) { border-color: var(--muted); color: var(--text); }
-  @keyframes pulse {
-    0%,100% { box-shadow: 0 0 0 0 rgba(76,175,125,0.5); }
-    50%      { box-shadow: 0 0 0 8px rgba(76,175,125,0); }
-  }
-
-  /* STATUS */
-  .status-bar {
-    width: min(480px, 100%); background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; padding: 11px 16px; font-size: 0.88rem; color: var(--muted);
-    text-align: center; min-height: 44px; transition: all 0.3s; margin-bottom: 12px;
-  }
-  .status-bar.correct { border-color: var(--green); color: var(--green); background: rgba(76,175,125,0.07); }
-  .status-bar.wrong   { border-color: var(--red);   color: var(--red);   background: rgba(224,92,92,0.07); }
-  .status-bar.info    { border-color: var(--accent2); color: var(--accent2); }
-
-  /* MARCADOR */
-  .score-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 10px; }
-  .score-pill {
-    background: var(--card); border: 1px solid var(--border); border-radius: 50px;
-    padding: 7px 18px; font-size: 0.85rem; font-weight: 700;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .dot { width: 8px; height: 8px; border-radius: 50%; }
-  .good .dot { background: var(--green); }
-  .bad  .dot { background: var(--red); }
-
-  /* FIN */
-  .fin-overlay { display: none; flex-direction: column; align-items: center; gap: 10px; margin-top: 8px; }
-  .fin-overlay.visible { display: flex; }
+  h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(2rem,6vw,3rem); letter-spacing:4px; color:var(--accent); text-shadow:0 0 30px rgba(247,201,72,0.3); margin-bottom:2px; }
+  .subtitle { font-size:0.8rem; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-bottom:10px; }
+  .lang-row { display:flex; gap:8px; margin-bottom:16px; }
+  .lang-btn { font-family:'Nunito',sans-serif; font-weight:800; font-size:0.85rem; padding:7px 18px; border-radius:50px; border:2px solid var(--border); background:var(--surface); color:var(--muted); cursor:pointer; transition:all 0.2s; letter-spacing:1px; }
+  .lang-btn.active { border-color:var(--accent); color:var(--accent); background:rgba(247,201,72,0.08); }
+  .rosco-wrapper { position:relative; width:min(340px,88vw); height:min(340px,88vw); margin-bottom:20px; overflow:visible; }
+  .rosco-wrapper svg { width:100%; height:100%; overflow:visible; }
+  .center-display { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; pointer-events:none; }
+  .big-letter { font-family:'Bebas Neue',sans-serif; font-size:clamp(4rem,14vw,6rem); color:var(--accent); line-height:1; text-shadow:0 0 40px rgba(247,201,72,0.5); }
+  .letter-label { font-size:0.7rem; color:var(--muted); letter-spacing:2px; text-transform:uppercase; }
+  .definition-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px 22px; width:min(480px,100%); min-height:72px; font-size:0.97rem; line-height:1.6; color:var(--text); text-align:center; margin-bottom:16px; transition:border-color 0.3s,box-shadow 0.3s; }
+  .definition-card.highlight { border-color:var(--accent2); box-shadow:0 0 20px rgba(79,195,247,0.1); }
+  .btn-row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:14px; width:min(480px,100%); }
+  button { font-family:'Nunito',sans-serif; font-weight:700; font-size:0.88rem; letter-spacing:0.5px; padding:11px 18px; border:none; border-radius:10px; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; gap:6px; flex:1; min-width:100px; justify-content:center; }
+  button:hover:not(:disabled) { transform:translateY(-1px); }
+  button:active:not(:disabled) { transform:translateY(0); }
+  button:disabled { opacity:0.4; cursor:not-allowed; }
+  #btnEscuchar { background:var(--accent2); color:#0d0f1a; }
+  #btnResponder { background:var(--accent); color:#0d0f1a; }
+  #btnParar { background:var(--green); color:#fff; animation:pulse 1s infinite; display:none; }
+  #btnPasa { background:var(--surface); color:var(--muted); border:1px solid var(--border); }
+  #btnPasa:hover:not(:disabled) { border-color:var(--muted); color:var(--text); }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(76,175,125,0.5);} 50%{box-shadow:0 0 0 8px rgba(76,175,125,0);} }
+  .status-bar { width:min(480px,100%); background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:11px 16px; font-size:0.88rem; color:var(--muted); text-align:center; min-height:44px; transition:all 0.3s; margin-bottom:12px; }
+  .status-bar.correct { border-color:var(--green); color:var(--green); background:rgba(76,175,125,0.07); }
+  .status-bar.wrong { border-color:var(--red); color:var(--red); background:rgba(224,92,92,0.07); }
+  .status-bar.info { border-color:var(--accent2); color:var(--accent2); }
+  .score-row { display:flex; gap:12px; justify-content:center; margin-bottom:10px; }
+  .score-pill { background:var(--card); border:1px solid var(--border); border-radius:50px; padding:7px 18px; font-size:0.85rem; font-weight:700; display:flex; align-items:center; gap:6px; }
+  .dot { width:8px; height:8px; border-radius:50%; }
+  .good .dot { background:var(--green); } .bad .dot { background:var(--red); }
+  .fin-overlay { display:none; flex-direction:column; align-items:center; gap:10px; margin-top:8px; }
+  .fin-overlay.visible { display:flex; }
   .fin-title { font-family:'Bebas Neue',sans-serif; font-size:2.2rem; letter-spacing:3px; color:var(--accent); }
-  #btnReiniciar { background: var(--accent); color: #0d0f1a; padding: 12px 30px; border-radius: 50px; font-size: 0.95rem; flex: none; }
-
-  .tip { font-size: 0.72rem; color: var(--muted); margin-top: 6px; text-align: center; }
+  #btnReiniciar { background:var(--accent); color:#0d0f1a; padding:12px 30px; border-radius:50px; font-size:0.95rem; flex:none; }
+  .tip { font-size:0.72rem; color:var(--muted); margin-top:6px; text-align:center; }
 </style>
 </head>
 <body>
@@ -174,7 +62,6 @@
 <h1>Pasapalabra</h1>
 <div class="subtitle" id="subtitle">Juego por voz</div>
 
-<!-- SELECTOR IDIOMA -->
 <div class="lang-row">
   <button class="lang-btn active" id="btnES" onclick="setLang('es')">🇪🇸 Español</button>
   <button class="lang-btn" id="btnEN" onclick="setLang('en')">🇬🇧 English</button>
@@ -200,8 +87,8 @@
 <div class="status-bar" id="status"></div>
 
 <div class="score-row">
-  <div class="score-pill good"><div class="dot"></div><span id="scoreCorrect">0</span></div>
-  <div class="score-pill bad"> <div class="dot"></div><span id="scoreWrong">0</span></div>
+  <div class="score-pill good"><div class="dot"></div><span id="scoreCorrect">0 aciertos</span></div>
+  <div class="score-pill bad"><div class="dot"></div><span id="scoreWrong">0 fallos</span></div>
 </div>
 
 <div class="fin-overlay" id="finOverlay">
@@ -212,96 +99,98 @@
 <div class="tip" id="tip">Funciona mejor en Chrome / Edge · Necesita permiso de micrófono</div>
 
 <script>
-// ══════════════════════════════════════════════
-// PREGUNTAS — extraídas de los PDFs
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
+// PREGUNTAS — basadas en los PDFs de sistemas del cuerpo
+// Todas las letras del rosco español (A-Z sin Q,W,X,Y)
+// ══════════════════════════════════════════════════════
 const QUESTIONS = {
   es: [
-    { letter:"B", def:"Con la B: Sistema que transporta oxígeno y nutrientes por el cuerpo. Tiene sangre, vasos sanguíneos y el corazón.",  ans:"circulatorio", alts:["sistema circulatorio"] },
-    { letter:"C", def:"Con la C: Órgano que controla todo el cuerpo. Pertenece al sistema nervioso.",                                       ans:"cerebro" },
-    { letter:"D", def:"Con la D: Sistema que descompone los alimentos y obtiene energía. Tiene boca, estómago e intestinos.",              ans:"digestivo",    alts:["sistema digestivo"] },
-    { letter:"E", def:"Con la E: Sistema que produce hormonas y ayuda al cuerpo a crecer y mantenerse equilibrado.",                        ans:"endocrino",    alts:["sistema endocrino"] },
-    { letter:"H", def:"Con la H: Órgano del sistema circulatorio que bombea la sangre.",                                                    ans:"corazón",      alts:["corazon"] },
-    { letter:"I", def:"Con la I: Sistema que protege el cuerpo de los gérmenes y enfermedades.",                                           ans:"inmune",       alts:["sistema inmune","inmunológico"] },
-    { letter:"M", def:"Con la M: Sistema que nos ayuda a movernos. Tiene músculos.",                                                       ans:"muscular",     alts:["sistema muscular"] },
-    { letter:"N", def:"Con la N: Sistema que controla el cuerpo y envía mensajes. Tiene cerebro, médula espinal y nervios.",               ans:"nervioso",     alts:["sistema nervioso"] },
-    { letter:"O", def:"Con la O: Partes del cuerpo con una función específica, como el corazón, los pulmones o el cerebro.",               ans:"órganos",      alts:["organos"] },
-    { letter:"P", def:"Con la P: Órgano del sistema digestivo que también produce insulina.",                                               ans:"páncreas",     alts:["pancreas"] },
-    { letter:"R", def:"Con la R: Sistema que nos ayuda a respirar. Tiene pulmones y tráquea.",                                             ans:"respiratorio", alts:["sistema respiratorio"] },
-    { letter:"S", def:"Con la S: Sistema que sostiene y protege el cuerpo. Tiene huesos y el cráneo.",                                    ans:"esquelético",  alts:["esqueletal","sistema esquelético"] },
-    { letter:"T", def:"Con la T: Tubo que conecta la boca con los pulmones. Pertenece al sistema respiratorio.",                           ans:"tráquea",      alts:["traquea"] },
-    { letter:"V", def:"Con la V: Conductos que transportan la sangre por el cuerpo.",                                                      ans:"vasos",        alts:["vasos sanguíneos","vasos sanguineos"] },
+    { letter:"A", def:"Con la A: Sistema que transporta la sangre. Contiene la A: contiene arterias que llevan sangre del corazón al cuerpo.", ans:"arterias", alts:["arteria"] },
+    { letter:"B", def:"Con la B: Líquido rojo que circula por el sistema circulatorio transportando oxígeno y nutrientes.", ans:"sangre", alts:[] },
+    { letter:"C", def:"Con la C: Órgano del sistema circulatorio que bombea la sangre por todo el cuerpo.", ans:"corazón", alts:["corazon"] },
+    { letter:"D", def:"Con la D: Sistema que descompone los alimentos para obtener energía. Tiene boca, estómago e intestinos.", ans:"digestivo", alts:["sistema digestivo"] },
+    { letter:"E", def:"Con la E: Sistema que produce hormonas y regula el crecimiento y el equilibrio del cuerpo.", ans:"endocrino", alts:["sistema endocrino"] },
+    { letter:"F", def:"Con la F: Proceso del sistema digestivo que consiste en descomponer la comida. Contiene la F: digestión.", ans:"digestión", alts:["digestion"] },
+    { letter:"G", def:"Con la G: Órganos del sistema endocrino que producen y liberan hormonas directamente a la sangre.", ans:"glándulas", alts:["glandulas","glandula","glándula"] },
+    { letter:"H", def:"Con la H: Sustancias químicas producidas por el sistema endocrino que ayudan a crecer y desarrollarse.", ans:"hormonas", alts:["hormona"] },
+    { letter:"I", def:"Con la I: Parte del sistema digestivo donde se absorben los nutrientes de los alimentos.", ans:"intestinos", alts:["intestino"] },
+    { letter:"J", def:"Con la J: Punto de unión entre dos huesos del sistema esquelético que permite el movimiento.", ans:"juntura", alts:["articulación","articulacion"] },
+    { letter:"K", def:"Con la K: Dos órganos del sistema excretor que filtran la sangre y producen la orina.", ans:"kidney", alts:["riñones","rinones"] },
+    { letter:"L", def:"Con la L: Tejido del sistema esquelético que une hueso con hueso.", ans:"ligamento", alts:["ligamentos"] },
+    { letter:"M", def:"Con la M: Tejido del sistema muscular que se contrae para producir movimiento.", ans:"músculo", alts:["musculo","músculos","musculos"] },
+    { letter:"N", def:"Con la N: Sistema que controla el cuerpo y envía mensajes. Tiene cerebro, médula espinal y nervios.", ans:"nervioso", alts:["sistema nervioso"] },
+    { letter:"Ñ", def:"Con la Ñ: Persona de corta edad. Los sistemas del cuerpo se desarrollan desde que eres ___.", ans:"niño", alts:["niña"] },
+    { letter:"O", def:"Con la O: Partes del cuerpo con una función específica, como el corazón, los pulmones o el cerebro.", ans:"órganos", alts:["organos","órgano","organo"] },
+    { letter:"P", def:"Con la P: Órgano del sistema digestivo que también produce insulina para regular el azúcar en sangre.", ans:"páncreas", alts:["pancreas"] },
+    { letter:"R", def:"Con la R: Sistema que nos ayuda a respirar. Tiene pulmones, tráquea y nariz.", ans:"respiratorio", alts:["sistema respiratorio"] },
+    { letter:"S", def:"Con la S: Sistema que sostiene y protege el cuerpo. Tiene huesos, cartílagos y ligamentos.", ans:"esquelético", alts:["esqueletal","sistema esquelético","sistema esqueletal","oseo","óseo"] },
+    { letter:"T", def:"Con la T: Tubo del sistema respiratorio que conecta la boca con los pulmones.", ans:"tráquea", alts:["traquea"] },
+    { letter:"U", def:"Con la U: Órgano del sistema excretor donde se almacena la orina. Contiene la U: vejiga.", ans:"vejiga" },
+    { letter:"V", def:"Con la V: Conductos del sistema circulatorio que transportan la sangre por el cuerpo.", ans:"vasos", alts:["vasos sanguíneos","vasos sanguineos"] },
+    { letter:"Z", def:"Con la Z: Las células son la unidad más pequeña de los seres vi___.", ans:"vivos", alts:["vivo"] },
   ],
   en: [
-    { letter:"B", def:"With B: System that moves blood around the body. It carries oxygen and nutrients. It has the heart, blood, and blood vessels.", ans:"circulatory", alts:["circulatory system"] },
-    { letter:"C", def:"With C: System that controls the body and sends messages. It has the brain, spinal cord, and nerves.",              ans:"nervous",      alts:["nervous system"] },
-    { letter:"D", def:"With D: System that breaks down food and turns it into energy. It has the mouth, stomach, and intestines.",         ans:"digestive",    alts:["digestive system"] },
-    { letter:"E", def:"With E: System that helps the body grow and stay balanced. It produces hormones.",                                  ans:"endocrine",    alts:["endocrine system"] },
-    { letter:"H", def:"With H: Organ that pumps blood around the body. Part of the circulatory system.",                                   ans:"heart" },
-    { letter:"I", def:"With I: System that protects the body from germs and disease.",                                                     ans:"immune",       alts:["immune system"] },
-    { letter:"K", def:"With K: Organs that clean the blood and remove liquid waste from the body.",                                        ans:"kidneys" },
-    { letter:"L", def:"With L: Organs that bring oxygen into the body. Part of the respiratory system.",                                   ans:"lungs" },
-    { letter:"M", def:"With M: System that helps you move and bend. It has muscles.",                                                      ans:"muscular",     alts:["muscular system"] },
-    { letter:"N", def:"With N: Chemical messages made by the endocrine system that help us grow and develop.",                             ans:"hormones" },
-    { letter:"O", def:"With O: Parts of the body with a particular function, like the heart, lungs, and brain.",                           ans:"organs" },
-    { letter:"R", def:"With R: System that helps us breathe. It brings oxygen into the body. It has the lungs, trachea, and nose.",        ans:"respiratory",  alts:["respiratory system"] },
-    { letter:"S", def:"With S: System that helps support and protect the body. It has bones, cartilage, and ligaments.",                   ans:"skeletal",     alts:["skeletal system"] },
-    { letter:"T", def:"With T: Tube that connects the mouth to the lungs. Part of the respiratory system.",                                ans:"trachea" },
+    { letter:"A", def:"With A: Vessels that carry blood away from the heart to the body.", ans:"arteries", alts:["artery"] },
+    { letter:"B", def:"With B: Red liquid that travels through the circulatory system carrying oxygen and nutrients.", ans:"blood" },
+    { letter:"C", def:"With C: System that moves blood around the body. It has the heart, blood, and blood vessels.", ans:"circulatory", alts:["circulatory system"] },
+    { letter:"D", def:"With D: System that breaks down food and turns it into energy. It has the mouth, stomach, and intestines.", ans:"digestive", alts:["digestive system"] },
+    { letter:"E", def:"With E: System that helps the body grow and stay balanced. It produces hormones.", ans:"endocrine", alts:["endocrine system"] },
+    { letter:"F", def:"With F: Process of breaking down food in the digestive system.", ans:"digestion" },
+    { letter:"G", def:"With G: Organs of the endocrine system that produce and release hormones into the blood.", ans:"glands", alts:["gland"] },
+    { letter:"H", def:"With H: Organ that pumps blood around the body. Part of the circulatory system.", ans:"heart" },
+    { letter:"I", def:"With I: Part of the digestive system where nutrients are absorbed. Small and large ___.", ans:"intestines", alts:["intestine"] },
+    { letter:"J", def:"With J: Point where two bones meet in the skeletal system, allowing movement.", ans:"joint", alts:["joints"] },
+    { letter:"K", def:"With K: Two organs of the excretory system that filter blood and produce urine.", ans:"kidneys", alts:["kidney"] },
+    { letter:"L", def:"With L: Organs that bring oxygen into the body. Part of the respiratory system.", ans:"lungs", alts:["lung"] },
+    { letter:"M", def:"With M: System that helps you move and bend. It has muscles and tendons.", ans:"muscular", alts:["muscular system"] },
+    { letter:"N", def:"With N: System that controls the body and sends messages. It has the brain, spinal cord, and nerves.", ans:"nervous", alts:["nervous system"] },
+    { letter:"O", def:"With O: Parts of the body with a particular function, like the heart, lungs, and brain.", ans:"organs", alts:["organ"] },
+    { letter:"P", def:"With P: Organ of the digestive system that also produces insulin to regulate blood sugar.", ans:"pancreas" },
+    { letter:"R", def:"With R: System that helps us breathe. It brings oxygen into the body. It has the lungs, trachea, and nose.", ans:"respiratory", alts:["respiratory system"] },
+    { letter:"S", def:"With S: System that helps support and protect the body. It has bones, cartilage, and ligaments.", ans:"skeletal", alts:["skeletal system"] },
+    { letter:"T", def:"With T: Tube that connects the mouth to the lungs. Part of the respiratory system.", ans:"trachea" },
+    { letter:"U", def:"With U: Organ of the excretory system where urine is stored before leaving the body.", ans:"bladder" },
+    { letter:"V", def:"With V: Tubes of the circulatory system that carry blood back to the heart.", ans:"veins", alts:["vein"] },
+    { letter:"W", def:"With W: Liquid that makes up most of the blood and helps transport nutrients. Contains W: water.", ans:"water" },
+    { letter:"X", def:"With X: Type of scan used to see bones of the skeletal system. Contains X: X-ray.", ans:"x-ray", alts:["xray","x ray"] },
+    { letter:"Y", def:"With Y: When the body is ___ it means all systems are working together correctly.", ans:"healthy" },
+    { letter:"Z", def:"With Z: The basic unit of all living things. Contains Z: cells.", ans:"cells", alts:["cell"] },
   ]
 };
 
-// UI strings por idioma
+// ── UI strings por idioma ──
 const UI = {
   es: {
-    subtitle: "Juego por voz",
-    letterLabel: "letra",
-    listen: "Escuchar", speak: "Hablar", stop: "Listo", pass: "Pasapalabra",
-    restart: "Jugar de nuevo",
-    statusInit: 'Pulsa "Escuchar" para oír la pregunta o "Hablar" para responder.',
-    listening: "Escuchando... habla y pulsa ⏹ Listo 🎤",
-    correct: "¡Correcto! 🎉",
-    wrong: "Incorrecto. Era",
-    passMsg: "Pasapalabra → siguiente.",
-    noCaptured: "No se captó nada. Habla más alto e inténtalo de nuevo.",
-    errMic: "Error de micrófono",
-    noSupport: "Reconocimiento de voz no disponible. Usa Chrome o Edge.",
-    finish: "¡Rosco terminado!",
-    finStatus: "Partida finalizada",
-    tip: "Funciona mejor en Chrome / Edge · Necesita permiso de micrófono",
-    scoreGood: "aciertos", scoreBad: "fallos",
-    voiceLang: "es-ES",
-    passWord: "pasapalabra",
+    subtitle:"Juego por voz", letterLabel:"letra",
+    listen:"Escuchar", speak:"Hablar", stop:"Listo", pass:"Pasapalabra", restart:"Jugar de nuevo",
+    statusInit:'Pulsa "Escuchar" para oír la pregunta o "Hablar" para responder.',
+    listening:"Escuchando... habla y pulsa ⏹ Listo 🎤",
+    correct:"¡Correcto! 🎉", wrong:"Incorrecto. Era", passMsg:"Pasapalabra → siguiente.",
+    noCaptured:"No se captó nada. Habla más alto e inténtalo de nuevo.",
+    errMic:"Error de micrófono", noSupport:"Reconocimiento de voz no disponible. Usa Chrome o Edge.",
+    finish:"¡Rosco terminado!", finStatus:"Partida finalizada",
+    tip:"Funciona mejor en Chrome / Edge · Necesita permiso de micrófono",
+    scoreGood:"aciertos", scoreBad:"fallos", voiceLang:"es-ES", passWord:"pasapalabra",
   },
   en: {
-    subtitle: "Voice game",
-    letterLabel: "letter",
-    listen: "Listen", speak: "Speak", stop: "Done", pass: "Pass",
-    restart: "Play again",
-    statusInit: 'Press "Listen" to hear the question or "Speak" to answer.',
-    listening: "Listening... speak and press ⏹ Done 🎤",
-    correct: "Correct! 🎉",
-    wrong: "Wrong. It was",
-    passMsg: "Pass → next question.",
-    noCaptured: "Nothing captured. Speak louder and try again.",
-    errMic: "Microphone error",
-    noSupport: "Speech recognition not available. Use Chrome or Edge.",
-    finish: "Rosco finished!",
-    finStatus: "Game over",
-    tip: "Works best in Chrome / Edge · Requires microphone permission",
-    scoreGood: "correct", scoreBad: "wrong",
-    voiceLang: "en-GB",
-    passWord: "pass",
+    subtitle:"Voice game", letterLabel:"letter",
+    listen:"Listen", speak:"Speak", stop:"Done", pass:"Pass", restart:"Play again",
+    statusInit:'Press "Listen" to hear the question or "Speak" to answer.',
+    listening:"Listening... speak and press ⏹ Done 🎤",
+    correct:"Correct! 🎉", wrong:"Wrong. It was", passMsg:"Pass → next question.",
+    noCaptured:"Nothing captured. Speak louder and try again.",
+    errMic:"Microphone error", noSupport:"Speech recognition not available. Use Chrome or Edge.",
+    finish:"Rosco finished!", finStatus:"Game over",
+    tip:"Works best in Chrome / Edge · Requires microphone permission",
+    scoreGood:"correct", scoreBad:"wrong", voiceLang:"en-GB", passWord:"pass",
   }
 };
 
-// estado
 let lang = "es";
-let QUESTIONS_ACTIVE = [];
 let state = [];
 let currentIndex = 0, correct = 0, wrong = 0, gameOver = false;
 let activeRec = null;
 
-// DOM
 const bigLetterEl  = document.getElementById("bigLetter");
 const definitionEl = document.getElementById("definition");
 const statusEl     = document.getElementById("status");
@@ -310,49 +199,49 @@ const scoreWroEl   = document.getElementById("scoreWrong");
 const finOverlay   = document.getElementById("finOverlay");
 const roscoSvg     = document.getElementById("roscoSvg");
 
-// ── CAMBIAR IDIOMA ──
+// ── IDIOMA ──
 function setLang(l) {
   lang = l;
-  document.getElementById("btnES").classList.toggle("active", l === "es");
-  document.getElementById("btnEN").classList.toggle("active", l === "en");
+  document.getElementById("btnES").classList.toggle("active", l==="es");
+  document.getElementById("btnEN").classList.toggle("active", l==="en");
   const u = UI[l];
-  document.getElementById("subtitle").textContent = u.subtitle;
+  document.getElementById("subtitle").textContent    = u.subtitle;
   document.getElementById("letterLabel").textContent = u.letterLabel;
   document.getElementById("lblEscuchar").textContent = u.listen;
-  document.getElementById("lblResponder").textContent = u.speak;
-  document.getElementById("lblParar").textContent = u.stop;
-  document.getElementById("lblPasa").textContent = u.pass;
-  document.getElementById("lblReiniciar").textContent = u.restart;
-  document.getElementById("finTitle").textContent = u.finish;
-  document.getElementById("tip").textContent = u.tip;
+  document.getElementById("lblResponder").textContent= u.speak;
+  document.getElementById("lblParar").textContent    = u.stop;
+  document.getElementById("lblPasa").textContent     = u.pass;
+  document.getElementById("lblReiniciar").textContent= u.restart;
+  document.getElementById("finTitle").textContent    = u.finish;
+  document.getElementById("tip").textContent         = u.tip;
   reiniciar();
 }
 
 // ── ROSCO SVG ──
 function drawRosco() {
-  const CX = 200, CY = 200, R = 174, r = 19;
+  const CX=200, CY=200, R=174, r=17;
   const n = state.length;
   roscoSvg.innerHTML = "";
   state.forEach((q, i) => {
-    const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
-    const x = +(CX + R * Math.cos(angle)).toFixed(2);
-    const y = +(CY + R * Math.sin(angle)).toFixed(2);
-    const isActive = (i === currentIndex && !gameOver);
+    const angle = (i/n)*Math.PI*2 - Math.PI/2;
+    const x = +(CX + R*Math.cos(angle)).toFixed(2);
+    const y = +(CY + R*Math.sin(angle)).toFixed(2);
+    const isActive = (i===currentIndex && !gameOver);
     let fill, stroke, textCol;
-    if (isActive)                { fill="#f7c948"; stroke="#f7c948"; textCol="#0d0f1a"; }
-    else if(q.status==="correct"){ fill="#1b3a2b"; stroke="#4caf7d"; textCol="#4caf7d"; }
-    else if(q.status==="wrong")  { fill="#3a1b1b"; stroke="#e05c5c"; textCol="#e05c5c"; }
-    else if(q.status==="skipped"){ fill="#1e2235"; stroke="#f7c948"; textCol="#f7c948"; }
-    else                         { fill="#1e2235"; stroke="#2a2f45"; textCol="#7a7f9a"; }
+    if (isActive)                 { fill="#f7c948"; stroke="#f7c948"; textCol="#0d0f1a"; }
+    else if(q.status==="correct") { fill="#1b3a2b"; stroke="#4caf7d"; textCol="#4caf7d"; }
+    else if(q.status==="wrong")   { fill="#3a1b1b"; stroke="#e05c5c"; textCol="#e05c5c"; }
+    else if(q.status==="skipped") { fill="#1e2235"; stroke="#f7c948"; textCol="#f7c948"; }
+    else                          { fill="#1e2235"; stroke="#2a2f45"; textCol="#7a7f9a"; }
     const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
-    circle.setAttribute("cx", x); circle.setAttribute("cy", y); circle.setAttribute("r", r);
-    circle.setAttribute("fill", fill); circle.setAttribute("stroke", stroke);
-    circle.setAttribute("stroke-width", isActive ? "2.5" : "1.5");
+    circle.setAttribute("cx",x); circle.setAttribute("cy",y); circle.setAttribute("r",r);
+    circle.setAttribute("fill",fill); circle.setAttribute("stroke",stroke);
+    circle.setAttribute("stroke-width", isActive?"2.5":"1.5");
     roscoSvg.appendChild(circle);
     const text = document.createElementNS("http://www.w3.org/2000/svg","text");
-    text.setAttribute("x", x); text.setAttribute("y", y);
+    text.setAttribute("x",x); text.setAttribute("y",y);
     text.setAttribute("text-anchor","middle"); text.setAttribute("dominant-baseline","central");
-    text.setAttribute("fill", textCol); text.setAttribute("font-size","13");
+    text.setAttribute("fill",textCol); text.setAttribute("font-size","11");
     text.setAttribute("font-weight","bold"); text.setAttribute("font-family","Nunito,sans-serif");
     text.textContent = q.letter;
     roscoSvg.appendChild(text);
@@ -362,177 +251,141 @@ function drawRosco() {
 // ── MOSTRAR PREGUNTA ──
 function showCurrentQuestion() {
   const u = UI[lang];
-  const anyPending = state.some(q => q.status === "pending" || q.status === "skipped");
+  const anyPending = state.some(q => q.status==="pending" || q.status==="skipped");
   if (!anyPending) {
     gameOver = true;
     bigLetterEl.textContent = "✔";
     definitionEl.textContent = u.finish;
-    setStatus(u.finStatus + " · " + correct + " " + u.scoreGood + " | " + wrong + " " + u.scoreBad, "info");
+    setStatus(u.finStatus+" · "+correct+" "+u.scoreGood+" | "+wrong+" "+u.scoreBad, "info");
     finOverlay.classList.add("visible");
-    ["btnEscuchar","btnResponder","btnParar","btnPasa"].forEach(id => document.getElementById(id).disabled = true);
+    ["btnEscuchar","btnResponder","btnParar","btnPasa"].forEach(id=>document.getElementById(id).disabled=true);
     drawRosco(); return;
   }
-  let tries = 0;
-  while ((state[currentIndex].status === "correct" || state[currentIndex].status === "wrong") && tries < state.length) {
-    currentIndex = (currentIndex + 1) % state.length; tries++;
+  let tries=0;
+  while ((state[currentIndex].status==="correct"||state[currentIndex].status==="wrong") && tries<state.length) {
+    currentIndex=(currentIndex+1)%state.length; tries++;
   }
   const q = state[currentIndex];
   bigLetterEl.textContent = q.letter;
   definitionEl.textContent = q.def;
   definitionEl.classList.add("highlight");
-  setTimeout(() => definitionEl.classList.remove("highlight"), 600);
-  scoreCorEl.textContent = correct + " " + u.scoreGood;
-  scoreWroEl.textContent = wrong + " " + u.scoreBad;
+  setTimeout(()=>definitionEl.classList.remove("highlight"),600);
+  scoreCorEl.textContent = correct+" "+u.scoreGood;
+  scoreWroEl.textContent = wrong+" "+u.scoreBad;
   drawRosco();
 }
 
 function nextQuestion() {
   const start = currentIndex;
   do {
-    currentIndex = (currentIndex + 1) % state.length;
-    if (currentIndex === start) break;
-  } while (state[currentIndex].status === "correct" || state[currentIndex].status === "wrong");
+    currentIndex=(currentIndex+1)%state.length;
+    if(currentIndex===start) break;
+  } while(state[currentIndex].status==="correct"||state[currentIndex].status==="wrong");
   showCurrentQuestion();
 }
 
-// ── NORMALIZAR ──
 const norm = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9 ]/g,"").trim();
 
-// ── COMPROBAR RESPUESTA ──
 function checkAnswer(userAnswer) {
   const u = UI[lang];
   const q = state[currentIndex];
   const normUser = norm(userAnswer);
-
-  if (normUser === norm(u.passWord) || normUser === "pasapalabra" || normUser === "pass") {
-    q.status = "skipped";
-    setStatus('"' + userAnswer + '" → ' + u.passMsg, "info");
-    setTimeout(nextQuestion, 600); return;
+  if (normUser===norm(u.passWord)||normUser==="pasapalabra"||normUser==="pass") {
+    q.status="skipped";
+    setStatus('"'+userAnswer+'" → '+u.passMsg,"info");
+    setTimeout(nextQuestion,600); return;
   }
-
-  // comprobar respuesta principal y alternativas
-  const allValid = [q.ans, ...(q.alts || [])].map(norm);
+  const allValid = [q.ans,...(q.alts||[])].map(norm);
   if (allValid.includes(normUser)) {
-    correct++; q.status = "correct";
-    setStatus('"' + userAnswer + '" → ' + u.correct, "correct");
+    correct++; q.status="correct";
+    setStatus('"'+userAnswer+'" → '+u.correct,"correct");
     speak(u.correct.replace(" 🎉",""));
   } else {
-    wrong++; q.status = "wrong";
-    setStatus('"' + userAnswer + '" → ' + u.wrong + ': ' + q.ans, "wrong");
-    speak(u.wrong + " " + q.ans);
+    wrong++; q.status="wrong";
+    setStatus('"'+userAnswer+'" → '+u.wrong+': '+q.ans,"wrong");
+    speak(u.wrong+" "+q.ans);
   }
-  scoreCorEl.textContent = correct + " " + u.scoreGood;
-  scoreWroEl.textContent = wrong + " " + u.scoreBad;
+  scoreCorEl.textContent=correct+" "+u.scoreGood;
+  scoreWroEl.textContent=wrong+" "+u.scoreBad;
   drawRosco();
-  setTimeout(nextQuestion, 1400);
+  setTimeout(nextQuestion,1400);
 }
 
-// ── SÍNTESIS DE VOZ ──
 function speak(text) {
-  if (!window.speechSynthesis) return;
+  if(!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = UI[lang].voiceLang; u.rate = 0.92;
+  u.lang=UI[lang].voiceLang; u.rate=0.92;
   window.speechSynthesis.speak(u);
 }
 
-// ── RECONOCIMIENTO DE VOZ ──
 function startRecognition() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { alert(UI[lang].noSupport); return; }
+  const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){alert(UI[lang].noSupport);return;}
   window.speechSynthesis.cancel();
-
-  document.getElementById("btnResponder").style.display = "none";
-  document.getElementById("btnParar").style.display = "flex";
-
+  document.getElementById("btnResponder").style.display="none";
+  document.getElementById("btnParar").style.display="flex";
   const rec = new SR();
   activeRec = rec;
-  rec.lang = UI[lang].voiceLang;
-  rec.continuous = true;
-  rec.interimResults = true;
-  rec.maxAlternatives = 3;
-
-  let lastTranscript = "";
-
-  rec.onstart = () => setStatus(UI[lang].listening, "info");
-
-  rec.onerror = (e) => {
-    setStatus(UI[lang].errMic + ": " + e.error, "wrong");
-    stopRecognition(lastTranscript, false);
-  };
-
-  rec.onresult = (e) => {
-    let interim = "";
-    for (let i = e.resultIndex; i < e.results.length; i++) {
-      const t = e.results[i][0].transcript;
-      if (e.results[i].isFinal) lastTranscript += t;
-      else interim = t;
+  rec.lang=UI[lang].voiceLang; rec.continuous=true; rec.interimResults=true; rec.maxAlternatives=3;
+  let lastTranscript="";
+  rec.onstart=()=>setStatus(UI[lang].listening,"info");
+  rec.onerror=(e)=>{ setStatus(UI[lang].errMic+": "+e.error,"wrong"); stopRecognition(lastTranscript,false); };
+  rec.onresult=(e)=>{
+    let interim="";
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      const t=e.results[i][0].transcript;
+      if(e.results[i].isFinal) lastTranscript+=t; else interim=t;
     }
-    const display = (lastTranscript + " " + interim).trim();
-    if (display) setStatus("🎤 " + display, "info");
+    const display=(lastTranscript+" "+interim).trim();
+    if(display) setStatus("🎤 "+display,"info");
   };
-
-  rec.onend = () => {
-    if (lastTranscript.trim()) stopRecognition(lastTranscript, true);
-  };
-
+  rec.onend=()=>{ if(lastTranscript.trim()) stopRecognition(lastTranscript,true); };
   rec.start();
 }
 
-function stopRecognition(transcript, fromOnEnd) {
-  if (activeRec) { try { activeRec.stop(); } catch(e) {} activeRec = null; }
-  document.getElementById("btnResponder").style.display = "flex";
-  document.getElementById("btnParar").style.display = "none";
-  if (transcript && transcript.trim()) {
-    checkAnswer(transcript.trim());
-  } else if (!fromOnEnd) {
-    setStatus(UI[lang].noCaptured, "wrong");
-  }
+function stopRecognition(transcript,fromOnEnd) {
+  if(activeRec){try{activeRec.stop();}catch(e){} activeRec=null;}
+  document.getElementById("btnResponder").style.display="flex";
+  document.getElementById("btnParar").style.display="none";
+  if(transcript&&transcript.trim()) checkAnswer(transcript.trim());
+  else if(!fromOnEnd) setStatus(UI[lang].noCaptured,"wrong");
 }
 
-function setStatus(msg, type) {
-  statusEl.textContent = msg;
-  statusEl.className = "status-bar " + (type || "");
-}
+function setStatus(msg,type){ statusEl.textContent=msg; statusEl.className="status-bar "+(type||""); }
 
-// ── REINICIAR ──
 function reiniciar() {
-  if (activeRec) { try { activeRec.stop(); } catch(e) {} activeRec = null; }
-  QUESTIONS_ACTIVE = QUESTIONS[lang];
-  state = QUESTIONS_ACTIVE.map(q => ({ ...q, status: "pending" }));
-  currentIndex = 0; correct = 0; wrong = 0; gameOver = false;
+  if(activeRec){try{activeRec.stop();}catch(e){} activeRec=null;}
+  state=QUESTIONS[lang].map(q=>({...q,status:"pending"}));
+  currentIndex=0; correct=0; wrong=0; gameOver=false;
   finOverlay.classList.remove("visible");
-  document.getElementById("btnResponder").style.display = "flex";
-  document.getElementById("btnParar").style.display = "none";
-  ["btnEscuchar","btnResponder","btnPasa"].forEach(id => document.getElementById(id).disabled = false);
-  setStatus(UI[lang].statusInit, "");
+  document.getElementById("btnResponder").style.display="flex";
+  document.getElementById("btnParar").style.display="none";
+  ["btnEscuchar","btnResponder","btnPasa"].forEach(id=>document.getElementById(id).disabled=false);
+  setStatus(UI[lang].statusInit,"");
   showCurrentQuestion();
 }
 
-// ── BOTONES ──
-document.getElementById("btnEscuchar").onclick  = () => speak(state[currentIndex].def);
-document.getElementById("btnResponder").onclick = () => startRecognition();
-document.getElementById("btnParar").onclick = () => {
-  const transcript = statusEl.textContent.replace("🎤 ","").trim();
-  const captured = (transcript.startsWith("Escuchando") || transcript.startsWith("Listening")) ? "" : transcript;
-  stopRecognition(captured, false);
+document.getElementById("btnEscuchar").onclick  = ()=>speak(state[currentIndex].def);
+document.getElementById("btnResponder").onclick = ()=>startRecognition();
+document.getElementById("btnParar").onclick = ()=>{
+  const t=statusEl.textContent.replace("🎤 ","").trim();
+  const captured=(t.startsWith("Escuchando")||t.startsWith("Listening"))?"":t;
+  stopRecognition(captured,false);
 };
-document.getElementById("btnPasa").onclick = () => {
-  state[currentIndex].status = "skipped";
-  setStatus(UI[lang].passMsg, "info");
-  drawRosco();
-  setTimeout(nextQuestion, 400);
+document.getElementById("btnPasa").onclick = ()=>{
+  state[currentIndex].status="skipped";
+  setStatus(UI[lang].passMsg,"info");
+  drawRosco(); setTimeout(nextQuestion,400);
 };
 document.getElementById("btnReiniciar").onclick = reiniciar;
 
-// ── PERMISO MICRÓFONO ──
-if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-  navigator.mediaDevices.getUserMedia({ audio: true }).catch(
-    () => setStatus("⚠️ " + (lang === "es" ? "Permiso de micrófono denegado." : "Microphone permission denied."), "wrong")
+if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
+  navigator.mediaDevices.getUserMedia({audio:true}).catch(
+    ()=>setStatus("⚠️ Permiso de micrófono denegado.","wrong")
   );
 }
 
-// ── INICIO ──
 reiniciar();
 </script>
 </body>
