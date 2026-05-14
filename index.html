@@ -324,32 +324,50 @@ function startRecognition() {
   btn.textContent = "🔴 Escuchando...";
   btn.disabled = true;
   const rec = new SR();
-  rec.lang = "es-ES"; rec.interimResults = false; rec.maxAlternatives = 3;
+  rec.lang = "es-ES";
+  rec.continuous = true;
+  rec.interimResults = true;
+  rec.maxAlternatives = 3;
+
   let autoStop = null;
   let gotResult = false;
+
   rec.onstart = () => {
     setStatus("Escuchando... habla ahora 🎤", "info");
-    // Android a veces no detecta el silencio — forzamos parada a los 7s
     autoStop = setTimeout(() => {
-      if (!gotResult) {
-        try { rec.stop(); } catch(e) {}
-        setStatus("No se detectó voz. Pulsa de nuevo 🎤", "wrong");
-        resetBtn();
-      }
-    }, 7000);
+      try { rec.stop(); } catch(e) {}
+    }, 8000);
   };
+
   rec.onerror = (e) => {
     clearTimeout(autoStop);
     setStatus("Error de micrófono: " + e.error, "wrong");
     resetBtn();
   };
+
   rec.onresult = (e) => {
-    gotResult = true;
-    clearTimeout(autoStop);
-    checkAnswer(e.results[0][0].transcript);
-    resetBtn();
+    if (gotResult) return;
+    // buscar el primer resultado final
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) {
+        gotResult = true;
+        clearTimeout(autoStop);
+        try { rec.stop(); } catch(e2) {}
+        checkAnswer(e.results[i][0].transcript);
+        resetBtn();
+        return;
+      }
+    }
+    // mostrar lo que va captando (interim)
+    const interim = e.results[e.results.length - 1][0].transcript;
+    setStatus("Escuchando: " + interim + " 🎤", "info");
   };
-  rec.onend = () => { clearTimeout(autoStop); if (!gotResult) resetBtn(); };
+
+  rec.onend = () => {
+    clearTimeout(autoStop);
+    if (!gotResult) resetBtn();
+  };
+
   rec.start();
 }
 
