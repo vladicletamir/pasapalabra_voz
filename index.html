@@ -100,7 +100,7 @@
   button:disabled { opacity: 0.4; cursor: not-allowed; }
   #btnEscuchar  { background: var(--accent2); color: #0d0f1a; }
   #btnResponder { background: var(--accent);  color: #0d0f1a; }
-  #btnResponder.listening { background: var(--green); animation: pulse 1s infinite; }
+  #btnParar     { background: var(--green);   color: #fff; animation: pulse 1s infinite; }
   #btnPasa { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
   #btnPasa:hover:not(:disabled) { border-color: var(--muted); color: var(--text); }
   @keyframes pulse {
@@ -148,7 +148,8 @@
 
 <div class="btn-row">
   <button id="btnEscuchar">🔊 Escuchar</button>
-  <button id="btnResponder">🎤 Responder</button>
+  <button id="btnResponder">🎤 Hablar</button>
+  <button id="btnParar" style="display:none">⏹ Listo</button>
   <button id="btnPasa">⏭ Pasapalabra</button>
 </div>
 
@@ -250,7 +251,7 @@ function showCurrentQuestion() {
     definitionEl.textContent = "¡Has completado el rosco!";
     setStatus("Partida finalizada · Aciertos: " + correct + " | Fallos: " + wrong, "info");
     finOverlay.classList.add("visible");
-    ["btnEscuchar","btnResponder","btnPasa"].forEach(id => document.getElementById(id).disabled = true);
+    ["btnEscuchar","btnResponder","btnParar","btnPasa"].forEach(id => document.getElementById(id).disabled = true);
     drawRosco();
     return;
   }
@@ -315,68 +316,77 @@ function speak(text, onEnd) {
   window.speechSynthesis.speak(u);
 }
 
+let activeRec = null;
+
 function startRecognition() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) { alert("Reconocimiento de voz no disponible. Usa Chrome o Edge."); return; }
   window.speechSynthesis.cancel();
-  const btn = document.getElementById("btnResponder");
-  btn.classList.add("listening");
-  btn.textContent = "🔴 Escuchando...";
-  btn.disabled = true;
+
+  const btnR = document.getElementById("btnResponder");
+  const btnP = document.getElementById("btnParar");
+  btnR.style.display = "none";
+  btnP.style.display = "flex";
+
   const rec = new SR();
+  activeRec = rec;
   rec.lang = "es-ES";
-  rec.continuous = false;
-  rec.interimResults = false;
+  rec.continuous = true;
+  rec.interimResults = true;
   rec.maxAlternatives = 3;
 
-  let gotResult = false;
   let lastTranscript = "";
 
-  rec.onstart = () => setStatus("Escuchando... habla ahora 🎤", "info");
+  rec.onstart = () => setStatus("Escuchando... habla y pulsa ⏹ Listo 🎤", "info");
 
   rec.onerror = (e) => {
-    // 'no-speech' en Android = habló pero no se procesó bien, intentar con lo captado
-    if (e.error === "no-speech" && lastTranscript) {
-      gotResult = true;
-      checkAnswer(lastTranscript);
-    } else {
-      setStatus("Error: " + e.error + " — intenta de nuevo", "wrong");
-    }
-    resetBtn();
+    setStatus("Error: " + e.error + " — intenta de nuevo", "wrong");
+    stopRecognition(lastTranscript, false);
   };
 
   rec.onresult = (e) => {
-    gotResult = true;
-    // recoger cualquier resultado, final o no
-    let best = "";
-    for (let i = 0; i < e.results.length; i++) {
-      if (e.results[i][0].transcript) best = e.results[i][0].transcript;
+    let interim = "";
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const t = e.results[i][0].transcript;
+      if (e.results[i].isFinal) lastTranscript += t;
+      else interim = t;
     }
-    lastTranscript = best;
-    checkAnswer(best);
-    resetBtn();
+    const display = (lastTranscript + " " + interim).trim();
+    if (display) setStatus("🎤 " + display, "info");
   };
 
-  // onend es el último recurso: si Android cerró sin onresult
   rec.onend = () => {
-    if (!gotResult) {
-      if (lastTranscript) {
-        checkAnswer(lastTranscript);
-      } else {
-        setStatus("No se captó voz. Habla más alto e inténtalo de nuevo.", "wrong");
-      }
-      resetBtn();
+    // por si Android para solo
+    if (lastTranscript.trim()) {
+      stopRecognition(lastTranscript, true);
     }
   };
 
   rec.start();
 }
 
+function stopRecognition(transcript, fromOnEnd) {
+  if (activeRec) {
+    try { activeRec.stop(); } catch(e) {}
+    activeRec = null;
+  }
+  const btnR = document.getElementById("btnResponder");
+  const btnP = document.getElementById("btnParar");
+  btnR.style.display = "flex";
+  btnP.style.display = "none";
+
+  if (transcript && transcript.trim()) {
+    checkAnswer(transcript.trim());
+  } else if (!fromOnEnd) {
+    setStatus("No se captó nada. Habla más alto e inténtalo de nuevo.", "wrong");
+  }
+}
+
 function resetBtn() {
-  const btn = document.getElementById("btnResponder");
-  btn.classList.remove("listening");
-  btn.innerHTML = "🎤 Responder";
-  btn.disabled = false;
+  const btnR = document.getElementById("btnResponder");
+  const btnP = document.getElementById("btnParar");
+  btnR.style.display = "flex";
+  btnP.style.display = "none";
 }
 
 function setStatus(msg, type) {
@@ -386,6 +396,11 @@ function setStatus(msg, type) {
 
 document.getElementById("btnEscuchar").onclick  = () => speak(state[currentIndex].def);
 document.getElementById("btnResponder").onclick = () => startRecognition();
+document.getElementById("btnParar").onclick = () => {
+  const transcript = (statusEl.textContent || "").replace("🎤 ", "").trim();
+  const captured = transcript.startsWith("Escuchando") ? "" : transcript;
+  stopRecognition(captured, false);
+};
 document.getElementById("btnPasa").onclick = () => {
   state[currentIndex].status = "skipped";
   setStatus("Pasapalabra → siguiente pregunta.", "info");
@@ -396,7 +411,7 @@ document.getElementById("btnReiniciar").onclick = () => {
   state = QUESTIONS.map(q => ({ ...q, status: "pending" }));
   currentIndex = 0; correct = 0; wrong = 0; gameOver = false;
   finOverlay.classList.remove("visible");
-  ["btnEscuchar","btnResponder","btnPasa"].forEach(id => document.getElementById(id).disabled = false);
+  ["btnEscuchar","btnResponder","btnParar","btnPasa"].forEach(id => document.getElementById(id).disabled = false);
   setStatus('Pulsa "Escuchar" para oír la pregunta o "Responder" para hablar.', "");
   showCurrentQuestion();
 };
