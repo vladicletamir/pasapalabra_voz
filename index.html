@@ -325,10 +325,31 @@ function startRecognition() {
   btn.disabled = true;
   const rec = new SR();
   rec.lang = "es-ES"; rec.interimResults = false; rec.maxAlternatives = 3;
-  rec.onstart  = () => setStatus("Escuchando... habla ahora 🎤", "info");
-  rec.onerror  = (e) => { setStatus("Error de micrófono: " + e.error, "wrong"); resetBtn(); };
-  rec.onresult = (e) => { checkAnswer(e.results[0][0].transcript); resetBtn(); };
-  rec.onend    = () => resetBtn();
+  let autoStop = null;
+  let gotResult = false;
+  rec.onstart = () => {
+    setStatus("Escuchando... habla ahora 🎤", "info");
+    // Android a veces no detecta el silencio — forzamos parada a los 7s
+    autoStop = setTimeout(() => {
+      if (!gotResult) {
+        try { rec.stop(); } catch(e) {}
+        setStatus("No se detectó voz. Pulsa de nuevo 🎤", "wrong");
+        resetBtn();
+      }
+    }, 7000);
+  };
+  rec.onerror = (e) => {
+    clearTimeout(autoStop);
+    setStatus("Error de micrófono: " + e.error, "wrong");
+    resetBtn();
+  };
+  rec.onresult = (e) => {
+    gotResult = true;
+    clearTimeout(autoStop);
+    checkAnswer(e.results[0][0].transcript);
+    resetBtn();
+  };
+  rec.onend = () => { clearTimeout(autoStop); if (!gotResult) resetBtn(); };
   rec.start();
 }
 
