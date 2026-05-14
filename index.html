@@ -325,47 +325,48 @@ function startRecognition() {
   btn.disabled = true;
   const rec = new SR();
   rec.lang = "es-ES";
-  rec.continuous = true;
-  rec.interimResults = true;
+  rec.continuous = false;
+  rec.interimResults = false;
   rec.maxAlternatives = 3;
 
-  let autoStop = null;
   let gotResult = false;
+  let lastTranscript = "";
 
-  rec.onstart = () => {
-    setStatus("Escuchando... habla ahora 🎤", "info");
-    autoStop = setTimeout(() => {
-      try { rec.stop(); } catch(e) {}
-    }, 8000);
-  };
+  rec.onstart = () => setStatus("Escuchando... habla ahora 🎤", "info");
 
   rec.onerror = (e) => {
-    clearTimeout(autoStop);
-    setStatus("Error de micrófono: " + e.error, "wrong");
+    // 'no-speech' en Android = habló pero no se procesó bien, intentar con lo captado
+    if (e.error === "no-speech" && lastTranscript) {
+      gotResult = true;
+      checkAnswer(lastTranscript);
+    } else {
+      setStatus("Error: " + e.error + " — intenta de nuevo", "wrong");
+    }
     resetBtn();
   };
 
   rec.onresult = (e) => {
-    if (gotResult) return;
-    // buscar el primer resultado final
-    for (let i = e.resultIndex; i < e.results.length; i++) {
-      if (e.results[i].isFinal) {
-        gotResult = true;
-        clearTimeout(autoStop);
-        try { rec.stop(); } catch(e2) {}
-        checkAnswer(e.results[i][0].transcript);
-        resetBtn();
-        return;
-      }
+    gotResult = true;
+    // recoger cualquier resultado, final o no
+    let best = "";
+    for (let i = 0; i < e.results.length; i++) {
+      if (e.results[i][0].transcript) best = e.results[i][0].transcript;
     }
-    // mostrar lo que va captando (interim)
-    const interim = e.results[e.results.length - 1][0].transcript;
-    setStatus("Escuchando: " + interim + " 🎤", "info");
+    lastTranscript = best;
+    checkAnswer(best);
+    resetBtn();
   };
 
+  // onend es el último recurso: si Android cerró sin onresult
   rec.onend = () => {
-    clearTimeout(autoStop);
-    if (!gotResult) resetBtn();
+    if (!gotResult) {
+      if (lastTranscript) {
+        checkAnswer(lastTranscript);
+      } else {
+        setStatus("No se captó voz. Habla más alto e inténtalo de nuevo.", "wrong");
+      }
+      resetBtn();
+    }
   };
 
   rec.start();
