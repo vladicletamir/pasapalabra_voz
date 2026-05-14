@@ -51,7 +51,9 @@ button {
 <div id="score"></div>
 
 <script>
-// --- PREGUNTAS DE EJEMPLO ---
+// -----------------------------
+// 1. PREGUNTAS
+// -----------------------------
 const questions = [
   { letter: "A", definition: "Con la A: Órgano que bombea la sangre por todo el cuerpo.", answer: "corazón", done: false },
   { letter: "B", definition: "Con la B: Órgano donde se almacena la orina.", answer: "vejiga", done: false },
@@ -64,17 +66,22 @@ let currentIndex = 0;
 let correct = 0;
 let wrong = 0;
 
-// --- VOZ: SÍNTESIS ---
+// -----------------------------
+// 2. SÍNTESIS DE VOZ
+// -----------------------------
 function speak(text) {
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = "es-ES";
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.speak(utter);
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utter);
 }
 
-// --- VOZ: RECONOCIMIENTO ---
+// -----------------------------
+// 3. RECONOCIMIENTO DE VOZ
+// -----------------------------
 function startRecognition(callback) {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
   if (!SpeechRecognition) {
     alert("Tu navegador no soporta reconocimiento de voz.");
     return;
@@ -85,8 +92,18 @@ function startRecognition(callback) {
   recognition.interimResults = false;
   recognition.maxAlternatives = 1;
 
-  recognition.onstart = () => statusEl.textContent = "Escuchando...";
-  recognition.onerror = (e) => statusEl.textContent = "Error: " + e.error;
+  recognition.onstart = () => {
+    statusEl.textContent = "🎤 Escuchando...";
+  };
+
+  recognition.onerror = (e) => {
+    statusEl.textContent = "❌ Error: " + e.error;
+
+    // Android devuelve "network" aunque haya internet
+    if (e.error === "network") {
+      statusEl.textContent += " (Chrome Android bloqueó el micrófono)";
+    }
+  };
 
   recognition.onresult = (e) => {
     const transcript = e.results[0][0].transcript.toLowerCase().trim();
@@ -96,7 +113,9 @@ function startRecognition(callback) {
   recognition.start();
 }
 
-// --- ACTUALIZAR PANTALLA ---
+// -----------------------------
+// 4. INTERFAZ
+// -----------------------------
 const letterEl = document.getElementById("letter");
 const definitionEl = document.getElementById("definition");
 const statusEl = document.getElementById("status");
@@ -123,7 +142,9 @@ function showCurrentQuestion() {
   statusEl.textContent = "";
 }
 
-// --- COMPROBAR RESPUESTA ---
+// -----------------------------
+// 5. COMPROBAR RESPUESTA
+// -----------------------------
 function checkAnswer(userAnswer) {
   const q = questions[currentIndex];
   statusEl.textContent = `Has dicho: "${userAnswer}"`;
@@ -137,28 +158,21 @@ function checkAnswer(userAnswer) {
   if (userAnswer === q.answer) {
     correct++;
     q.done = true;
-    statusEl.textContent += " → ¡Correcto!";
+    statusEl.textContent += " → ✔ Correcto";
   } else {
     wrong++;
     q.done = true;
-    statusEl.textContent += ` → Incorrecto. Era "${q.answer}".`;
+    statusEl.textContent += ` → ❌ Incorrecto. Era "${q.answer}".`;
   }
 
   currentIndex = (currentIndex + 1) % questions.length;
   setTimeout(showCurrentQuestion, 800);
 }
 
-// --- BOTONES ---
-document.getElementById("btnSpeakQuestion").onclick = () => speak(questions[currentIndex].definition);
-document.getElementById("btnAnswerVoice").onclick = () => startRecognition(checkAnswer);
-document.getElementById("btnPasapalabra").onclick = () => {
-  statusEl.textContent = "Pasapalabra.";
-  currentIndex = (currentIndex + 1) % questions.length;
-  showCurrentQuestion();
-};
+// -----------------------------
+// 6. BOTONES
+// -----------------------------
+document.getElementById("btnSpeakQuestion").onclick = () =>
+  speak(questions[currentIndex].definition);
 
-showCurrentQuestion();
-</script>
-
-</body>
-</html>
+document.get
